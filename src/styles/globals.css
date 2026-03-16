@@ -1,26 +1,138 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:is(.dark *));
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: oklch(18.18% 0.009 264.33);
+  --foreground: oklch(0.9219 0 0);
+  --border: oklch(0.3715 0 0);
+
+  --blue-100: oklch(71.03% 0.086 255.95);
+  --blue-200: oklch(62.93% 0.196 257.43);
+  --blue-300: oklch(51.91% 0.158 257.31);
+  --blue-400: oklch(27.82% 0.074 256.71);
+  --cyan-100: oklch(86.03% 0.14 204.6);
+  --cyan-200: oklch(54.03% 0.086 204.3);
+  --cyan-300: oklch(36.54% 0.056 203.8);
+  --gray-100: oklch(98.49% 0.003 264.54);
+  --gray-200: oklch(87.26% 0.006 264.53);
+  --gray-300: oklch(67.57% 0.013 264.48);
+  --gray-400: oklch(25.98% 0.016 264.24);
+  --gray-500: oklch(20.91% 0.01 268.19);
+  --gray-600: oklch(19.98% 0.009 264.36);
+  --gray-700: oklch(18.18% 0.009 264.33);
+  --gray-800: oklch(15.46% 0.007 270.96);
+
+  --font-sans: PT Sans Caption, sans-serif;
+  --font-inter: Inter, sans-serif;
+
+  --radius: 0.5rem;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-border: var(--border);
+
+  --color-blue-100: var(--blue-100);
+  --color-blue-200: var(--blue-200);
+  --color-blue-300: var(--blue-300);
+  --color-blue-400: var(--blue-400);
+  --color-cyan-100: var(--cyan-100);
+  --color-cyan-200: var(--cyan-200);
+  --color-cyan-300: var(--cyan-300);
+  --color-gray-100: var(--gray-100);
+  --color-gray-200: var(--gray-200);
+  --color-gray-300: var(--gray-300);
+  --color-gray-400: var(--gray-400);
+  --color-gray-500: var(--gray-500);
+  --color-gray-600: var(--gray-600);
+  --color-gray-700: var(--gray-700);
+  --color-gray-800: var(--gray-800);
+
+  --font-sans: var(--font-sans);
+  --font-inter: var(--font-inter);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    @apply scroll-smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground overscroll-none;
+    font-synthesis-weight: none;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer utilities {
+  .container {
+    @apply mx-auto max-w-7xl p-[2rem] xl:px-6;
+  }
+
+  .text-heading-hg {
+    @apply font-sans text-[40px] leading-[120%] font-bold;
+  }
+
+  .text-heading-xl {
+    @apply font-sans text-[32px] leading-[120%] font-bold;
+  }
+
+  .text-heading-lg {
+    @apply font-sans text-[28px] leading-[120%] font-bold;
+  }
+
+  .text-heading-md {
+    @apply font-sans text-2xl leading-[120%] font-bold;
+  }
+
+  .text-heading-sm {
+    @apply font-sans text-xl leading-[120%] font-bold;
+  }
+
+  .text-heading-xs {
+    @apply font-sans text-base leading-[120%] font-bold;
+  }
+
+  .text-body-md {
+    @apply font-inter text-base leading-[150%] font-normal;
+  }
+
+  .text-body-sm {
+    @apply font-inter text-sm leading-[150%] font-normal;
+  }
+
+  .text-body-xs {
+    @apply font-inter text-xs leading-[150%] font-normal;
+  }
+
+  .text-body-tag {
+    @apply font-inter text-xs leading-normal font-medium;
+  }
+
+  .text-action-md {
+    @apply font-inter text-base leading-normal font-medium;
+  }
+
+  .text-action-sm {
+    @apply font-inter text-sm leading-normal font-medium;
+  }
 }
