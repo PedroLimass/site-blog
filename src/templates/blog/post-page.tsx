@@ -1,8 +1,9 @@
-import { useRouter } from "next/router";
+import { Post } from "contentlayer/generated";
 import Image from "next/image";
 import Link from "next/link";
-import { allPosts } from "contentlayer/generated";
 
+import { Avatar } from "@/components/avatar";
+import { Markdown } from "@/components/markdown";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -10,23 +11,16 @@ import {
   BreadcrumbList,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { Avatar } from "@/components/avatar";
-import { Markdown } from "@/components/markdown";
 import { Button } from "@/components/ui/button";
 import { useShare } from "@/hook/use-share";
 
-export const PostPage = () => {
-  const router = useRouter();
-  const slug = router.query.slug as string | undefined;
-  const post = allPosts.find(
-    (post) => post.slug?.toLowerCase() === slug?.toLowerCase()
-  )!;
-  const postImageSrc = post?.image || "/assets/primeiro-post.png";
-  const authorAvatarSrc = post?.author?.avatar || "/customer-01.png";
-  const authorName = post?.author?.name || "Autor desconhecido";
-  const publishedDate = new Date(post?.date).toLocaleDateString("pt-BR");
+export type PostPageProps = {
+  post: Post;
+};
 
-  const postUrl = `https://site.set/blog/${slug}`;
+export const PostPage = ({ post }: PostPageProps) => {
+  const publishedDate = new Date(post?.date).toLocaleDateString("pt-BR");
+  const postUrl = `https://site.set/blog/${post.slug}`;
 
   const { shareButtons } = useShare({
     url: postUrl,
@@ -54,10 +48,10 @@ export const PostPage = () => {
         </Breadcrumb>
 
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_300px] lg:gap-12">
-          <article className="overflow-hidden rounded-lg border border-gray-400 bg-gray-600">
-            <figure className="relative aspect-16/10 w-full overflow-hidden rounded-lg">
+          <article className="overflow-hidden rounded-lg border-[1px] border-gray-400 bg-gray-600">
+            <figure className="relative aspect-[16/10] w-full overflow-hidden rounded-lg">
               <Image
-                src={postImageSrc}
+                src={post?.image ?? ""}
                 alt={post?.title ?? ""}
                 fill
                 className="object-cover"
@@ -71,22 +65,22 @@ export const PostPage = () => {
 
               <Avatar.Container>
                 <Avatar.Image
-                  src={authorAvatarSrc}
-                  alt={authorName}
+                  src={post?.author.avatar}
+                  alt={post?.title}
                   size="sm"
                 />
                 <Avatar.Content>
-                  <Avatar.Title>{authorName}</Avatar.Title>
+                  <Avatar.Title>{post?.author.name}</Avatar.Title>
                   <Avatar.Description>
                     Publicado em {""}
-                    <time dateTime={post?.date ?? ""}>{publishedDate}</time>
+                    <time dateTime={post?.date}>{publishedDate}</time>
                   </Avatar.Description>
                 </Avatar.Content>
               </Avatar.Container>
             </header>
 
             <div className="prose prose-invert mt-12 max-w-none px-4 md:px-6 lg:px-12">
-              <Markdown content={post?.body.raw ?? ""} />
+              <Markdown content={post?.body.raw} />
             </div>
           </article>
 
