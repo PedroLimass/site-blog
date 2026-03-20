@@ -1,5 +1,5 @@
 import { createElement, useCallback, useMemo } from "react";
-import { Check, Link2 } from "lucide-react";
+import { Check, Link } from "lucide-react";
 import {
   ShareConfig,
   SOCIAL_PROVIDERS,
@@ -76,7 +76,7 @@ export const useShare = ({
                 : "scale-75 -rotate-45 opacity-0"
             }`,
           }),
-          createElement(Link2, {
+          createElement(Link, {
             className: `absolute inset-0 h-4 w-4 transform transition-all duration-300 ${
               isCopied
                 ? "scale-75 rotate-45 opacity-0"

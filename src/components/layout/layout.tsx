@@ -1,6 +1,7 @@
 import { Header } from "./header/header";
 import { Footer } from "./footer/footer";
 import { Inter, PT_Sans_Caption } from "next/font/google";
+import { CallToAction } from "@/templates/landing-page/sections";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -25,6 +26,7 @@ export const Layout = ({ children }: LayoutProps) => {
     >
       <Header />
       <main className="flex flex-1 flex-col">{children}</main>
+      <CallToAction />
       <Footer />
     </div>
   );
