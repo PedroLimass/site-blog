@@ -13,14 +13,26 @@ import {
 import { Avatar } from "@/components/avatar";
 import { Markdown } from "@/components/markdown";
 import { Button } from "@/components/ui/button";
+import { useShare } from "@/hook/use-share";
 
 export default function PostPage() {
   const router = useRouter();
-  const slug = router.query.slug as string;
+  const slug = router.query.slug as string | undefined;
   const post = allPosts.find(
-    (post) => post.slug.toLowerCase() === slug.toLowerCase()
+    (post) => post.slug?.toLowerCase() === slug?.toLowerCase()
   )!;
+  const postImageSrc = post?.image || "/assets/primeiro-post.png";
+  const authorAvatarSrc = post?.author?.avatar || "/customer-01.png";
+  const authorName = post?.author?.name || "Autor desconhecido";
   const publishedDate = new Date(post?.date).toLocaleDateString("pt-BR");
+
+  const postUrl = `https://site.set/blog/${slug}`;
+
+  const { shareButtons } = useShare({
+    url: postUrl,
+    title: post?.title,
+    text: post?.description,
+  });
 
   return (
     <main className="mt-32 text-gray-100">
@@ -45,7 +57,7 @@ export default function PostPage() {
           <article className="overflow-hidden rounded-lg border border-gray-400 bg-gray-600">
             <figure className="relative aspect-16/10 w-full overflow-hidden rounded-lg">
               <Image
-                src={post?.image ?? ""}
+                src={postImageSrc}
                 alt={post?.title ?? ""}
                 fill
                 className="object-cover"
@@ -59,35 +71,41 @@ export default function PostPage() {
 
               <Avatar.Container>
                 <Avatar.Image
-                  src={post?.author.avatar}
-                  alt={post?.title}
+                  src={authorAvatarSrc}
+                  alt={authorName}
                   size="sm"
                 />
                 <Avatar.Content>
-                  <Avatar.Title>{post?.author.name}</Avatar.Title>
+                  <Avatar.Title>{authorName}</Avatar.Title>
                   <Avatar.Description>
                     Publicado em {""}
-                    <time dateTime={post.date}>{publishedDate}</time>
+                    <time dateTime={post?.date ?? ""}>{publishedDate}</time>
                   </Avatar.Description>
                 </Avatar.Content>
               </Avatar.Container>
             </header>
 
             <div className="prose prose-invert mt-12 max-w-none px-4 md:px-6 lg:px-12">
-              <Markdown content={post.body.raw} />
+              <Markdown content={post?.body.raw ?? ""} />
             </div>
           </article>
 
           <aside className="space-y-6">
-            <div className="rounded-lg bg-gray-700 p-4 md:p-6">
+            <div className="rounded-lg bg-gray-700">
               <h2 className="text-heading-xs mb-4 text-gray-100">
                 Compartilhar
               </h2>
 
               <div className="space-y-3">
-                {[{ key: "1", providerName: "LinkedIn" }].map((provider) => (
-                  <Button key={provider.key} variant="outline">
-                    {provider.providerName}
+                {shareButtons.map((provider) => (
+                  <Button
+                    key={provider.provider}
+                    onClick={() => provider.action()}
+                    variant="outline"
+                    className="w-full justify-start gap-2"
+                  >
+                    {provider.icon}
+                    {provider.name}
                   </Button>
                 ))}
               </div>

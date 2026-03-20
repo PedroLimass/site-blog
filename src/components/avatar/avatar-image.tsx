@@ -18,6 +18,8 @@ export const AvatarImage = ({
   size = "xs",
   ...rest
 }: AvatarImageProps) => {
+  const safeSrc = src || "/customer-01.png";
+
   return (
     <div
       className={cn(
@@ -25,7 +27,7 @@ export const AvatarImage = ({
         avatarSize[size]
       )}
     >
-      <Image {...rest} src={src} alt={alt} fill />;
+      <Image {...rest} src={safeSrc} alt={alt} fill />
     </div>
   );
 };
