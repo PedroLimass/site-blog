@@ -1,11 +1,11 @@
-import { createElement, useCallback, useMemo } from "react";
-import { Check, Link } from "lucide-react";
+import { useCallback, useMemo } from 'react';
+import { Link } from 'lucide-react';
 import {
   ShareConfig,
   SOCIAL_PROVIDERS,
   SocialProvider,
-} from "./social-providers";
-import { useClipboard } from "../use-clipboard/use-clipboard";
+} from './social-providers';
+import { useClipboard } from '../use-clipboard';
 
 type UseShareProps = ShareConfig & {
   clipboardTimeout?: number;
@@ -13,11 +13,12 @@ type UseShareProps = ShareConfig & {
 
 export const useShare = ({
   url,
-  title = "",
-  text = "",
+  title,
+  text,
   clipboardTimeout = 2000,
 }: UseShareProps) => {
   const { isCopied, handleCopy } = useClipboard({ timeout: clipboardTimeout });
+
   const shareConfig = useMemo(
     () => ({
       url,
@@ -30,7 +31,7 @@ export const useShare = ({
   const share = useCallback(
     async (provider: SocialProvider) => {
       try {
-        if (provider === "clipboard") {
+        if (provider === 'clipboard') {
           return await handleCopy(url);
         }
 
@@ -42,8 +43,8 @@ export const useShare = ({
         const shareUrl = providerConfig.shareUrl(shareConfig);
         const shareWindow = window.open(
           shareUrl,
-          "_blank",
-          "width=600, height=600, location=yes, status=yes"
+          '_blank',
+          'width=600, height=600, location=yes, status=yes'
         );
 
         return !!shareWindow;
@@ -64,30 +65,13 @@ export const useShare = ({
         action: () => share(key as SocialProvider),
       })),
       {
-        provider: "clipboard",
-        name: "Copiar",
-        icon: createElement(
-          "span",
-          { className: "relative block h-4 w-4" },
-          createElement(Check, {
-            className: `absolute inset-0 h-4 w-4 transform transition-all duration-300 ${
-              isCopied
-                ? "scale-100 rotate-0 opacity-100"
-                : "scale-75 -rotate-45 opacity-0"
-            }`,
-          }),
-          createElement(Link, {
-            className: `absolute inset-0 h-4 w-4 transform transition-all duration-300 ${
-              isCopied
-                ? "scale-75 rotate-45 opacity-0"
-                : "scale-100 rotate-0 opacity-100"
-            }`,
-          })
-        ),
-        action: () => share("clipboard"),
+        provider: 'clipboard',
+        name: isCopied ? 'Link copiado!' : 'Copiar link',
+        icon: <Link className="h-4 w-4" />,
+        action: () => share('clipboard'),
       },
     ],
-    [share, isCopied]
+    [isCopied, share]
   );
 
   return { shareButtons };

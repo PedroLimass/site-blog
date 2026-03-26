@@ -1,4 +1,4 @@
-import { BlogList, BlogListProps } from "@/templates/blog";
+import { BlogList, type BlogListProps } from "@/templates/blog";
 import { allPosts } from "contentlayer/generated";
 import { GetStaticProps } from "next";
 

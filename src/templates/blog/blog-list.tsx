@@ -1,32 +1,33 @@
+"use client";
+
 import { Search } from "@/components/search";
-import { PostCard } from "@/components/post-card";
-import { useRouter } from "next/router";
-import { PostGridCard } from "@/components/post-grid-card/post-grid-card";
 import { Post } from "contentlayer/generated";
 import { Inbox } from "lucide-react";
+import { useSearchParams } from "next/navigation";
+import { PostCard } from "./components/post-card";
+import { PostGridCard } from "./components/post-grid-card";
 
 export type BlogListProps = {
   posts: Post[];
 };
 
 export function BlogList({ posts }: BlogListProps) {
-  const router = useRouter();
-  const query = router.query.q as string;
+  const searchParams = useSearchParams();
+  const query = searchParams?.get("q") ?? "";
   const pageTitle = query
     ? `Resultados de busca para "${query}"`
     : "Dicas e estratégias para impulsionar seu negócio";
 
-  const postsList = query
+  const postList = query
     ? posts.filter((post) =>
         post.title.toLocaleLowerCase()?.includes(query.toLocaleLowerCase())
       )
     : posts;
-
-  const hasPosts = postsList?.length > 0;
+  const hasPosts = postList?.length > 0;
 
   return (
     <div className="flex h-full flex-grow flex-col py-24">
-      <header className="">
+      <header className="pb-14">
         <div className="container flex flex-col items-start justify-between space-y-6 md:flex-row md:items-end lg:items-end">
           <div className="flex flex-col gap-4 md:px-0">
             {/* TAG */}
@@ -47,7 +48,7 @@ export function BlogList({ posts }: BlogListProps) {
       {/* Listagem de posts */}
       {hasPosts && (
         <PostGridCard>
-          {postsList.map((post) => (
+          {postList.map((post) => (
             <PostCard
               key={post._id}
               title={post.title}
@@ -56,8 +57,8 @@ export function BlogList({ posts }: BlogListProps) {
               slug={post.slug}
               image={post.image}
               author={{
-                avatar: post.author?.avatar ?? "/customer-01.png",
-                name: post.author?.name ?? "Autor desconhecido",
+                avatar: post.author.avatar,
+                name: post.author.name,
               }}
             />
           ))}
